@@ -1,0 +1,28 @@
+{
+  "welcome": "::: <b>به ربات ثبت نسیه ها خوش آمدید</b> ::: ",
+  "enter_name": "نام مشتری",
+  "enter_fof_name": "نام خانوادگی یا نام پدر مشتری",
+  "enter_phone": "تلفن مشتری",
+  "enter_reason": "دلیل بدهی",
+  "enter_amount": "مقدار بدهی",
+  "enter_settled": "تسویه شده؟",
+  "reason_selected": "دلیل انتخاب شده: <b>${reason}</b>\n",
+  "settled_state": "<b>تسویه شده؟: </b> ${st}\n",
+  "preview": "<b>اطلاعات درسته؟</b>\n\uD83D\uDCA0 نام:                  ${name}\n\uD83D\uDCA0 پدر|خانوادگی:  ${fofName}\n\uD83D\uDCA0 دلیل:               ${reason}\n\uD83D\uDCA0 موبایل:             ${phoneNumber}\n\uD83C\uDF00 مبلغ:                ${amount}\n\uD83C\uDF00 تسویه شده:     ${settled}\n\u2067",
+  "reset": "وارد کردن مجدد اطلاعات",
+  "yes": "آره \uD83D\uDC4D\uD83C\uDFFC",
+  "no": "نه \uD83D\uDE41",
+  "successful_submit": "نسیه با موفقیت ثبت شد، پیگیری: ${id}",
+  "failed_submit": "ثبت نسیه با خطا مواجه شد!",
+  "errors": {
+    "phone_number": "شماره موبایل وارد شده اشتباه است، لطفا مجددا وارد کنید"
+  },
+  "reason": {
+    "1": "اینترنت",
+    "2": "بیمه",
+    "3": "کتاب",
+    "4": "تراکتور",
+    "5": "مالیات",
+    "6": "ابلاغیه"
+  }
+}
