@@ -20,6 +20,7 @@
     "regenerator-runtime": "^0.13.7"
   },
   "dependencies": {
+    "@persian-tools/persian-tools": "^3.0.1",
     "dotenv": "^8.2.0",
     "excel4node": "^1.7.2",
     "node-telegram-bot-api": "^0.50.0",

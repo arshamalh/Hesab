@@ -100,7 +100,7 @@ export function enterSettled(ctx, val) {
 
 export function selectSettled(ctx) {
   let st = JSON.parse(ctx.callbackQuery.data).p;
-  st = st ? ctx.i18n.t('yes') : ctx.i18n.t('no')
+  st = st ? ctx.i18n.t('btns.yes') : ctx.i18n.t('btns.no')
   ctx.session.Customer['settled'] = st;
   ctx.answerCbQuery()
   ctx.telegram.editMessageText(

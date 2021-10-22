@@ -4,8 +4,8 @@ export function submitOrderKeyboard(ctx) {
   return Extra.HTML().markup((m) =>
     m.inlineKeyboard(
       [
-        m.callbackButton(ctx.i18n.t('yes'), JSON.stringify({a: 'submitOrder', p: true}), false),
-        m.callbackButton(ctx.i18n.t('no'), JSON.stringify({a: 'submitOrder', p: false}), false)
+        m.callbackButton(ctx.i18n.t('btns.yes'), JSON.stringify({a: 'submitOrder', p: true}), false),
+        m.callbackButton(ctx.i18n.t('btns.no'), JSON.stringify({a: 'submitOrder', p: false}), false)
       ],
       {}
     )
@@ -16,8 +16,8 @@ export function settlementKeyboard(ctx) {
   return Extra.HTML().markup((m) =>
     m.inlineKeyboard(
       [
-        m.callbackButton(ctx.i18n.t('yes'), JSON.stringify({a: 'selectSettled', p: true}), false),
-        m.callbackButton(ctx.i18n.t('no'), JSON.stringify({a: 'selectSettled', p: false}), false)
+        m.callbackButton(ctx.i18n.t('btns.yes'), JSON.stringify({a: 'selectSettled', p: true}), false),
+        m.callbackButton(ctx.i18n.t('btns.no'), JSON.stringify({a: 'selectSettled', p: false}), false)
       ],
       {}
     )
@@ -48,7 +48,7 @@ export function newDebtKeyboard(ctx) {
   return Extra.HTML().markup((m) =>
     m.inlineKeyboard(
       [
-        m.callbackButton(ctx.i18n.t('new_debt'), JSON.stringify({a: 'newDebt', p: true}), false)
+        m.callbackButton(ctx.i18n.t('btns.new_debt'), JSON.stringify({a: 'newDebt', p: true}), false)
       ],
       {}
     )
