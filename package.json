@@ -22,10 +22,8 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "excel4node": "^1.7.2",
-    "mongoose": "^5.9.25",
     "node-telegram-bot-api": "^0.50.0",
-    "qrcode": "^1.4.4",
-    "redis": "^3.0.2",
+    "redis": "^3.1.2",
     "sqlite3": "^5.0.2",
     "telegraf": "^3.38.0",
     "telegraf-i18n": "^6.6.0",
