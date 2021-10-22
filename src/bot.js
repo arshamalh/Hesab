@@ -1,18 +1,18 @@
 require('@babel/register');
+import path from "path";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
-import Telegraf, {ContextMessageUpdate, Extra, Markup} from 'telegraf';
+import Telegraf from 'telegraf';
 import TelegrafI18n, {match} from 'telegraf-i18n';
-import {DataBaseInit} from "./util/database"
-
-const RedisSession = require('telegraf-session-redis');
 import Stage from 'telegraf/stage';
 import session from 'telegraf/session';
-import path from "path";
-import startScene from './controllers/start';
-
+import startScene from "./controllers/start";
+import enterDebtScene from './controllers/enterDept';
+import debtListScene from './controllers/debtList';
+import {DataBaseInit} from "./util/database"
 import {getUserInfo} from './middlewares/user-info';
 
+const RedisSession = require('telegraf-session-redis');
 require('dotenv').config();
 
 global.bot = new Telegraf(process.env.TELEGRAM_TOKEN);
@@ -24,7 +24,7 @@ global.r_session = new RedisSession({
 });
 DataBaseInit()
 const stage = new Stage([
-    startScene
+    startScene, enterDebtScene, debtListScene
 ]);
 const i18n = new TelegrafI18n({
     defaultLanguage: 'fa',
@@ -58,7 +58,16 @@ bot.hears(
     }
 );
 
-
-bot.catch((error) => {
+bot.hears(match('keyboards.enter_debt'), ctx => {
+    ctx.scene.enter('enterDebt')
 });
+
+bot.hears(match('keyboards.debt_list'), ctx => {
+    ctx.scene.enter('debtList')
+});
+
+bot.catch((err) => {
+    console.log("There is in bot.js", err)
+});
+
 bot.launch();

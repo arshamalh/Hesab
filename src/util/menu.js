@@ -2,6 +2,8 @@ import {Markup} from "telegraf";
 
 export const mainKeyboard = (ctx) => {
     const back = ctx.i18n.t('keyboards.back');
-    let mainKeyboard = Markup.keyboard([[back]])
+    const enter_debt = ctx.i18n.t('keyboards.enter_debt');
+    const debt_list = ctx.i18n.t('keyboards.debt_list');
+    let mainKeyboard = Markup.keyboard([[debt_list, enter_debt], [back]])
     return mainKeyboard.resize().extra();
 }

@@ -1,42 +1,57 @@
-const sqlite3 = require('sqlite3').verbose();
+const { Pool } = require('pg')
 require("dotenv").config()
 
 const createTable = `CREATE TABLE IF NOT EXISTS Customers (
-   id integer NOT NULL PRIMARY KEY,
-   name text NOT NULL,
-   fofName text NOT NULL,
-   reason text,
-   amount integer,
-   settled text,
-   phone text
+   id SERIAL PRIMARY KEY,
+   name VARCHAR(100) NOT NULL,
+   phone VARCHAR(20) NOT NULL,
+   fofName VARCHAR(100),
+   settled VARCHAR(10),
+   amount NUMERIC,
+   reason TEXT,
+   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+   settled_at TIMESTAMP WITH TIME ZONE
 );`
 
 export function DataBaseInit() {
-    // open the database
-    global.db = new sqlite3.Database(process.env.DB_PATH, (err) => {
-        if (err) {
-            console.error(err.message);
-        }
-        console.log('Connected to the database.');
-    });
+    global.db = new Pool({
+      user: process.env.DB_USER,
+      host: process.env.DB_HOST,
+      database: process.env.DB,
+      password: process.env.DB_PASSWORD,
+      port: process.env.DB_PORT,
+    })
 
-    db.exec(createTable, (e) => {
-        if (e) console.log(e)
+    db.query(createTable, (err, res) => {
+        if (err) console.log(err)
         else console.log("Table created")
     })
 }
 
-export function newUser(name, fofName, reason, amount, settled, phone, cb) {
-    const sql = `INSERT INTO Customers 
-                 (name, fofName, reason, amount, settled, phone)
-                 VALUES (?, ?, ?, ?, ?, ?);`
+export function newUser(name, fofName, phone, reason, amount, settled, cb) {
+    const sql = {
+      text: `INSERT INTO Customers 
+             (name, fofName, phone, reason, amount, settled)
+             VALUES ($1, $2, $3, $4, $5, $6);`,
+      values: [name, fofName, phone, reason, amount, settled]
+    }
 
-    db.run(sql, [name, fofName, reason, amount, settled, phone], function (error) {
-        if (error) {
-            console.log(error)
+    db.query(sql, (err, res) => {
+        if (err) {
+            console.log(err)
         } else {
-            cb(this.lastID)
-            console.log("# of Row Changes: " + this.changes)
+            cb(1) // TODO: Need to return ID
+            console.log(res)
         }
     })
+}
+
+export function getDebts() {
+  return new Promise((resolve, reject) => {
+    const sql = `SELECT * FROM Customers;`
+    db.query(sql, (err, res) => {
+      if (err) reject(err)
+      else resolve(res)
+    })
+  })
 }

@@ -1,127 +1,57 @@
-import {saveToSession} from "../../util/session";
-import {reasonKeyboard, submitOrderKeyboard, settlementKeyboard} from "./helpers";
-import {newUser} from "../../util/database";
-import {Extra} from "telegraf";
+import {makeRandomChars, sleep} from '../../util/common';
+import {updateLanguage} from '../../util/language';
+import {mainKeyboard} from "../../util/menu";
+import {getLanguageKeyboard} from "./helpers";
 
-export function enterName(ctx, val, next_cmd) {
-  ctx.replyWithHTML(ctx.i18n.t('enter_fof_name')) /// in enter name function, we have gotten the name and we want to tell user to enter next
-    .then(d => {
-      ctx.session.Customer['name'] = val;
-      ctx.session.next_cmd = next_cmd;
-      ctx.session.last_action_message = d.message_id;
-      saveToSession(ctx);
+require('dotenv').config();
+
+export async function languageChangeAction (ctx) {
+    const langData = JSON.parse(ctx.callbackQuery.data);
+    await updateLanguage(ctx, langData.p);
+    ctx.deleteMessage();
+    let k = mainKeyboard(ctx);
+    // k.disable_web_page_preview = true;
+    ctx.replyWithHTML(ctx.i18n.t('scenes.start.help'), k);
+
+    /*
+    ctx.reply(ctx.i18n.t('scenes.start.h'))
+        .then(() => {
+            sleep(0.3)
+                .then(() => {
+                    ctx.replyWithHTML(ctx.i18n.t('scenes.start.bot_description', {fee: process.env.COINVELA_REGULAR_AWARD}), mainKeyboard(ctx));
+                });
+        });*/
+};
+
+export function newUser(ctx) {
+    return new Promise(resolve => {
+        User.aggregate([
+            {"$match": {_id: ctx.from.id.toString()}},
+            {"$project": {"channels": 0}}
+        ], (err, res) => {
+            if (res.length === 0) {
+                const now = new Date().getTime();
+                makeRandomChars(7)
+                    .then(support_id => {
+                        const newUser = new User({
+                            _id: ctx.from.id,
+                            created: now,
+                            username: ctx.from.username,
+                            name: ctx.from.first_name + ' ' + ctx.from.last_name,
+                            lastActivity: now,
+                            language: process.env.COINVELA_DEFAULT_LANGUAGE,
+                            support_id,
+                        });
+                        newUser.save()
+                            .then((res) => {
+                                // console.log(res);
+                                ctx.reply('Select your language', getLanguageKeyboard());
+                                resolve(true);
+                            }).catch(err => {
+                            console.log(err)
+                        });
+                    });
+            } else resolve(false);
+        });
     });
-}
-
-export function enterFofName(ctx, val, next_cmd) {
-  ctx.replyWithHTML(ctx.i18n.t('enter_phone'))
-    .then(d => {
-      ctx.session.Customer['fofName'] = val;
-      ctx.session.next_cmd = next_cmd
-      ctx.session.last_action_message = d.message_id;
-      saveToSession(ctx);
-    });
-}
-
-export function enterPhone(ctx, val, next_cmd) {
-  val = val.replace("+98", "")
-  if (!isNaN(val) && (val.length === 10 || val.length === 11)) {
-    ctx.replyWithHTML(ctx.i18n.t('enter_reason'), reasonKeyboard(ctx))
-      .then(d => {
-        ctx.session.Customer['phoneNumber'] = val;
-        ctx.session.next_cmd = next_cmd
-        ctx.session.last_action_message = d.message_id;
-        saveToSession(ctx);
-      });
-  } else {
-    ctx.replyWithHTML(ctx.i18n.t('errors.phone_number'))
-  }
-}
-
-export function enterReason(ctx, val, next_cmd) {
-  ctx.replyWithHTML(ctx.i18n.t('enter_amount'))
-    .then(d => {
-      ctx.session.Customer['reason'] = val;
-      ctx.session.next_cmd = next_cmd;
-      ctx.session.last_action_message = d.message_id;
-      saveToSession(ctx);
-    });
-}
-
-export function selectReason(ctx) {
-  let reason = JSON.parse(ctx.callbackQuery.data).p;
-  reason = ctx.i18n.t('reason.' + reason)
-  ctx.answerCbQuery()
-  ctx.telegram.editMessageText(
-    ctx.from.id,
-    ctx.session.last_action_message,
-    null,
-    ctx.i18n.t("reason_selected", {reason}),
-    Extra.HTML()).then(() => {
-    ctx.replyWithHTML(ctx.i18n.t('enter_amount')).then(d => {
-      ctx.session.Customer['reason'] = reason;
-      ctx.session.next_cmd = "enterAmount"
-      ctx.session.last_action_message = d.message_id;
-      saveToSession(ctx);
-    });
-  })
-}
-
-export function enterAmount(ctx, val, next_cmd) {
-    ctx.replyWithHTML(ctx.i18n.t('enter_settled'), settlementKeyboard(ctx))
-      .then(d => {
-        ctx.session.Customer['amount'] = val;
-        ctx.session.next_cmd = next_cmd
-        ctx.session.last_action_message = d.message_id;
-        saveToSession(ctx);
-      }).catch((e) => {
-        console.log(e)
-    })
-}
-
-export function enterSettled(ctx, val) {
-  ctx.session.Customer['settled'] = val;
-  console.log(ctx.session.Customer)
-  ctx.replyWithHTML(ctx.i18n.t('preview', ctx.session.Customer), submitOrderKeyboard(ctx))
-    .then(d => {
-      ctx.session.last_action_message = d.message_id;
-      saveToSession(ctx);
-    });
-}
-
-export function selectSettled(ctx) {
-  let st = JSON.parse(ctx.callbackQuery.data).p;
-  st = st ? ctx.i18n.t('yes') : ctx.i18n.t('no')
-  ctx.session.Customer['settled'] = st;
-  ctx.answerCbQuery()
-  ctx.telegram.editMessageText(
-    ctx.from.id,
-    ctx.session.last_action_message,
-    null,
-    ctx.i18n.t("settled_state", {st}),
-    Extra.HTML()).then(() => {
-    ctx.replyWithHTML(ctx.i18n.t('preview', ctx.session.Customer), submitOrderKeyboard(ctx)).then(d => {
-      ctx.session.last_action_message = d.message_id;
-      saveToSession(ctx);
-    });
-  })
-}
-
-export function submitOrder(ctx) {
-  const cond = JSON.parse(ctx.callbackQuery.data).p;
-  if (cond) {
-    let {name, fofName, phoneNumber, reason, amount, settled} = ctx.session.Customer
-    newUser(name, fofName, phoneNumber, reason, amount, settled, (result) => {
-      ctx.answerCbQuery()
-      if (result) {
-        ctx.telegram.editMessageReplyMarkup(ctx.from.id, ctx.session.last_action_message, null).then(() => {
-          ctx.replyWithHTML(ctx.i18n.t("successful_submit", {id: result}))
-        })
-      } else {
-        ctx.telegram.editMessageReplyMarkup(ctx.from.id, ctx.session.last_action_message, null).then(() => {
-          ctx.replyWithHTML(ctx.i18n.t("failed_submit"))
-        })
-      }
-    })
-  }
 }
