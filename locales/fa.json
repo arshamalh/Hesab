@@ -13,7 +13,7 @@
   "successful_submit": "نسیه با موفقیت ثبت شد، پیگیری: ${id}",
   "failed_submit": "ثبت نسیه با خطا مواجه شد!",
   "debt_list": "بخش لیست بدهی ها",
-  "debt_list_item": "<b>اطلاعات کاربر</b>\n\uD83D\uDCA0کد کاربر:            ${id}\n\uD83D\uDCA0  نام:                  ${name}\n\uD83D\uDCA0 پدر|خانوادگی:  ${fofname}\n\uD83D\uDCA0 موبایل:             ${phone}\n\uD83C\uDF00 مبلغ:                ${amount}\n\uD83C\uDF00 دلیل:               ${reason}\n\uD83D\uDCA0 تاریخ:              ${created_at}\n\uD83D\uDCA0 وضعیت:         ${settled}\n\uD83D\uDCA0  تاریخ تسویه:   ${settled_at}\n\u2067",
+  "debt_list_item": "<b>اطلاعات کاربر</b>\n\uD83D\uDCA0کد کاربر:            ${id}\n\uD83D\uDCA0  نام:                  ${name}\n\uD83D\uDCA0 پدر|خانوادگی:  ${fofname}\n\uD83D\uDCA0 موبایل:             ${phone}\n\uD83C\uDF00 مبلغ:                ${amount}\n\uD83C\uDF00 دلیل:               ${reason}\n\uD83D\uDCA0 تاریخ:              ${created_at}\n\uD83D\uDCA0 تسویه شده:      ${settled}\n\uD83D\uDCA0  تاریخ تسویه:   ${settled_at}\n\u2067",
   "debt_deleted": "بدهی حذف شد",
   "debt_settled": "حساب کاربر تسویه شد",
   "errors": {

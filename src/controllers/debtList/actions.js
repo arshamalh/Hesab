@@ -5,6 +5,25 @@ import {
   getDebtKeyboard
 } from "./helpers";
 import {removeDebtDB, settleDebtDB} from "../../util/database";
+import { timeAgo, digitsEnToFa } from "@persian-tools/persian-tools";
+const moment = require('jalali-moment');
+
+
+//
+
+function showDebtDetails(ctx, debt) {
+  debt = {...debt} // Use this method to disconnect from same reference
+  if (!!debt.settled_at) {
+    debt.settled_at = moment(debt.settled_at, 'YYYY-M-D HH:mm').locale('fa').format('YYYY/M/D HH:mm')
+    debt.settled_at = timeAgo(debt.settled_at) + " (" + digitsEnToFa(debt.settled_at.slice(0, 8)) + ")"
+  } else {
+    debt.settled_at = "---"
+  }
+  debt.created_at = moment(debt.created_at, 'YYYY-M-D HH:mm').locale('fa').format('YYYY/M/D HH:mm:ss')
+  debt.created_at = timeAgo(debt.created_at) + " (" + digitsEnToFa(debt.created_at.slice(0, 8)) + ")"
+  debt.phone = digitsEnToFa(debt.phone)
+  return ctx.i18n.t("debt_list_item", debt)
+}
 
 export function getDebt(ctx, idx, update = false) {
   let debts = ctx.session.debts
@@ -15,14 +34,14 @@ export function getDebt(ctx, idx, update = false) {
     console.log("LAST ID : ", ctx.session.active_debt_id)
     if (update) {
       ctx.editMessageText(
-        ctx.i18n.t("debt_list_item", debts[idx]),
+        showDebtDetails(ctx, debts[idx]),
         getDebtKeyboard(ctx, idx)
       ).catch((err) => {
         console.log("GetDebts if update = True", err);
       });
     } else {
       ctx.replyWithHTML(
-        ctx.i18n.t("debt_list_item", debts[idx]),
+        showDebtDetails(ctx, debts[idx]),
         getDebtKeyboard(ctx, idx)
       ).then((d) => {
         ctx.session.last_action_message = d.message_id;
