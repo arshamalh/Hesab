@@ -1,4 +1,3 @@
-import {Extra} from "telegraf";
 import {saveToSession} from "../../util/session";
 import {
   confirmDeleteKeyboard, confirmSettleKeyboard,
