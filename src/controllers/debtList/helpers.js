@@ -54,23 +54,23 @@ export function getDebtKeyboard(ctx, idx) {
       btns = makeNextPrevBtns(m, btns);
     }
     btns.push([
-        m.callbackButton(
-          ctx.i18n.t("btns.remove_debt"),
-          JSON.stringify({
-            a: "askRemoveConfirmation",
-            p: idx,
-          }),
-          false
-        ),
-        m.callbackButton(
-          ctx.i18n.t("btns.settle_debt"),
-          JSON.stringify({
-            a: "askSettleConfirmation",
-            p: idx,
-          }),
-          false
-        ),
-      ])
+      m.callbackButton(
+        ctx.i18n.t("btns.remove_debt"),
+        JSON.stringify({
+          a: "askRemoveConfirmation",
+          p: idx,
+        }),
+        false
+      ),
+      m.callbackButton(
+        ctx.i18n.t("btns.settle_debt"),
+        JSON.stringify({
+          a: "askSettleConfirmation",
+          p: idx,
+        }),
+        false
+      ),
+    ])
     return m.inlineKeyboard(btns, {});
   });
 }
@@ -105,6 +105,20 @@ export function confirmSettleKeyboard(ctx, idx) {
           a: 'cancel',
           p: idx
         }), false)]
+      ],
+      {}
+    )
+  );
+}
+
+export function showDebtorKeyboard(ctx, debtorID) {
+  return Extra.HTML().markup((m) =>
+    m.inlineKeyboard(
+      [[
+        m.callbackButton(ctx.i18n.t("btns.show_debtor"), JSON.stringify({
+          a: 'showDebtor',
+          p: debtorID
+        }), false)],
       ],
       {}
     )

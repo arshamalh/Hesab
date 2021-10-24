@@ -1,3 +1,5 @@
+import debtList from "./controllers/debtList";
+
 require('@babel/register');
 import path from "path";
 import "core-js/stable";
@@ -11,6 +13,7 @@ import enterDebtScene from './controllers/enterDept';
 import debtListScene from './controllers/debtList';
 import {DataBaseInit} from "./util/database"
 import {getUserInfo} from './middlewares/user-info';
+import {askRemoveConfirmation, askSettleConfirmation, nextPrevDebt, removeDebt, settleDebt, showDebtor} from "./controllers/debtList/actions";
 
 const RedisSession = require('telegraf-session-redis');
 require('dotenv').config();
@@ -45,7 +48,6 @@ bot.use((ctx, next) => {
 });
 bot.use(getUserInfo);
 
-
 bot.start((ctx) => {
     ctx.session.init = true;
     ctx.scene.enter('start')
@@ -65,6 +67,18 @@ bot.hears(match('keyboards.enter_debt'), ctx => {
 bot.hears(match('keyboards.debt_list'), ctx => {
     ctx.scene.enter('debtList')
 });
+
+// Global actions
+/*
+    These actions actually are related to alert system,
+    so it could be possible to call them from anywhere
+*/
+debtList.action(/askRemoveConfirmation/, askRemoveConfirmation)
+debtList.action(/askSettleConfirmation/, askSettleConfirmation)
+debtList.action(/showDebtor/, showDebtor);
+debtList.action(/removeDebt/, removeDebt);
+debtList.action(/settleDebt/, settleDebt);
+debtList.action(/cancel/, nextPrevDebt);
 
 bot.catch((err) => {
     console.log("There is in bot.js", err)

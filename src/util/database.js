@@ -49,18 +49,23 @@ export function newUser(name, fofName, phone, reason, amount, settled, cb) {
 }
 
 export function getAllDebts(cb) {
-    const sql = `SELECT * from Customers`
-    db.query(sql, (err, res) => {
-      if (err) console.log(err)
-      else {
-        cb(res.rows)
-      }
-    })
+  const sql = `SELECT * FROM Customers`
+  db.query(sql, (err, res) => {
+    if (err) console.log(err)
+    else {
+      cb(res.rows)
+    }
+  })
 }
 
-export function makeDebtList(ctx) {
+export function makeDebtList(ctx, id = null) {
   return new Promise((resolve, reject) => {
-    const sql = `SELECT * FROM Customers`
+    let sql;
+    if (id) sql = {
+      text: `SELECT * FROM Customers WHERE id = $1`,
+      values: [id]
+    }
+    else sql = `SELECT * FROM Customers`
     db.query(sql, (err, res) => {
       if (err) reject(err)
       else {

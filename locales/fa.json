@@ -16,6 +16,8 @@
   "debt_list_item": "<b>اطلاعات کاربر</b>\n\uD83D\uDCA0کد کاربر:            ${id}\n\uD83D\uDCA0  نام:                  ${name}\n\uD83D\uDCA0 پدر|خانوادگی:  ${fofname}\n\uD83D\uDCA0 موبایل:             ${phone}\n\uD83C\uDF00 مبلغ:                ${amount}\n\uD83C\uDF00 دلیل:               ${reason}\n\uD83D\uDCA0 تاریخ:              ${created_at}\n\uD83D\uDCA0 تسویه شده:      ${settled}\n\uD83D\uDCA0  تاریخ تسویه:   ${settled_at}\n\u2067",
   "debt_deleted": "بدهی حذف شد",
   "debt_settled": "حساب کاربر تسویه شد",
+  "debtor_timer": "کاربر ${name} به مدت ${days} است که بدهکار است.",
+
   "errors": {
     "phone_number": "شماره موبایل وارد شده اشتباه است، لطفا مجددا وارد کنید",
     "wrong_amount": "مبلغ وارد شده اشتباه است!",
@@ -44,6 +46,7 @@
     "settle_debt": "تسویه",
     "sure_delete": "اطمینان دارم، حذف کن \uD83D\uDC4D\uD83C\uDFFC",
     "sure_settle": "تسویه شده \uD83D\uDC4D\uD83C\uDFFC",
-    "cancel": "انصراف \uD83D\uDEAB"
+    "cancel": "انصراف \uD83D\uDEAB",
+    "show_debtor": "نمایش کاربر"
   }
 }

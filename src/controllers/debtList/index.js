@@ -1,8 +1,6 @@
 import Scene from 'telegraf/scenes/base';
-import {saveToSession} from "../../util/session";
 import {
-  askRemoveConfirmation, askSettleConfirmation,
-  getDebt, removeDebt, settleDebt
+  getDebt, nextPrevDebt
 } from "./actions";
 import {makeDebtList} from "../../util/database";
 import {match} from "telegraf-i18n";
@@ -17,47 +15,9 @@ debtList.enter(async ctx => {
   })
 });
 
-debtList.action(/askRemoveConfirmation/, askRemoveConfirmation)
-debtList.action(/askSettleConfirmation/, askSettleConfirmation)
-
-debtList.action(/nextDebt/, (ctx) => {
-  ctx.answerCbQuery(null);
-  const d = JSON.parse(ctx.callbackQuery.data);
-  let idx = d.p;
-  getDebt(ctx, idx, true);
-});
-
-debtList.action(/prevDebt/, (ctx) => {
-  ctx.answerCbQuery(null);
-  const d = JSON.parse(ctx.callbackQuery.data);
-  let idx = d.p;
-  getDebt(ctx, idx, true);
-});
-
-debtList.action(/cancel/, (ctx) => {
-  ctx.answerCbQuery(null);
-  const d = JSON.parse(ctx.callbackQuery.data);
-  let idx = d.p;
-  getDebt(ctx, idx, true);
-})
-
-debtList.action(/removeDebt/, (ctx) => {
-  const d = JSON.parse(ctx.callbackQuery.data);
-  let idx = d.p;
-  removeDebt(ctx).then(() => {
-    ctx.answerCbQuery(ctx.i18n.t("btns.remove_debt"));
-    getDebt(ctx, idx, true);
-  });
-});
-
-debtList.action(/settleDebt/, (ctx) => {
-  const d = JSON.parse(ctx.callbackQuery.data);
-  let idx = d.p;
-  settleDebt(ctx).then(() => {
-    ctx.answerCbQuery(ctx.i18n.t("btns.settle_debt"));
-    getDebt(ctx, idx, true);
-  });
-});
+// Show debtor, delete debtor and others are called in bot.js because sometimes they have global usage
+debtList.action(/nextDebt/, nextPrevDebt);
+debtList.action(/prevDebt/, nextPrevDebt);
 
 debtList.hears(match("keyboards.back"), async (ctx) => {
   ctx.telegram.editMessageReplyMarkup(

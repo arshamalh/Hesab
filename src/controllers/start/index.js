@@ -2,6 +2,7 @@ import Scene from 'telegraf/scenes/base';
 import {mainKeyboard} from '../../util/menu';
 import {onEnterSession} from "../../util/common";
 import {getAllDebts} from "../../util/database";
+import {showDebtorKeyboard} from "../debtList/helpers";
 
 const start = new Scene('start');
 
@@ -16,7 +17,9 @@ function startTimer(ctx) {
       for (let dbt of debts) {
         td = timeDifference(dbt.created_at)
         if (td > 1) {
-          ctx.replyWithHTML("User " + dbt.name + " has been a debtor for " + Math.round(td) + " days!")
+          ctx.replyWithHTML(
+            ctx.i18n.t('debtor_timer', {name: dbt.name, days: Math.round(td)}),
+            showDebtorKeyboard(ctx, dbt.id))
         }
       }
     })

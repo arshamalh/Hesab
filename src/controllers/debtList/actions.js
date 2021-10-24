@@ -3,8 +3,9 @@ import {
   confirmDeleteKeyboard, confirmSettleKeyboard,
   getDebtKeyboard
 } from "./helpers";
-import {removeDebtDB, settleDebtDB} from "../../util/database";
-import { timeAgo, digitsEnToFa } from "@persian-tools/persian-tools";
+import {makeDebtList, removeDebtDB, settleDebtDB} from "../../util/database";
+import {timeAgo, digitsEnToFa} from "@persian-tools/persian-tools";
+
 const moment = require('jalali-moment');
 
 
@@ -66,16 +67,17 @@ export function askRemoveConfirmation(ctx) {
 }
 
 export function removeDebt(ctx) {
-  return new Promise((resolve, reject) => {
-    let debtId = ctx.session.active_debt_id;
-    ctx.session.debts = ctx.session.debts.filter(
-      (debt) => debt.id !== debtId
-    );
-    removeDebtDB(debtId).then(r => {
-      saveToSession(ctx);
-      resolve(true);
-    })
-  });
+  const d = JSON.parse(ctx.callbackQuery.data);
+  let idx = d.p;
+  let debtId = ctx.session.active_debt_id;
+  ctx.session.debts = ctx.session.debts.filter(
+    (debt) => debt.id !== debtId
+  );
+  removeDebtDB(debtId).then(r => {
+    saveToSession(ctx);
+    ctx.answerCbQuery(ctx.i18n.t("btns.remove_debt"));
+    getDebt(ctx, idx, true);
+  })
 }
 
 export function askSettleConfirmation(ctx) {
@@ -89,15 +91,31 @@ export function askSettleConfirmation(ctx) {
 }
 
 export function settleDebt(ctx) {
-  return new Promise((resolve, reject) => {
+  const d = JSON.parse(ctx.callbackQuery.data);
+  let idx = d.p;
     let debtId = ctx.session.active_debt_id;
     ctx.session.debts = ctx.session.debts.filter(
       (debt) => debt.id !== debtId
     );
     settleDebtDB(debtId).then(r => {
       saveToSession(ctx);
-      resolve(true);
-    })
+      ctx.answerCbQuery(ctx.i18n.t("btns.settle_debt"));
+      getDebt(ctx, idx, true);
   });
 }
 
+export function nextPrevDebt(ctx) {
+  ctx.answerCbQuery(null);
+  const d = JSON.parse(ctx.callbackQuery.data);
+  let idx = d.p;
+  getDebt(ctx, idx, true);
+}
+
+export function showDebtor(ctx) {
+  ctx.answerCbQuery(null);
+  const d = JSON.parse(ctx.callbackQuery.data);
+  let debtor_id = d.p;
+  makeDebtList(ctx, debtor_id).then(() => {
+    getDebt(ctx, 0)
+  })
+}
