@@ -7,6 +7,8 @@ import {
   settlementKeyboard,
   newDebtKeyboard
 } from "./helpers";
+import {digitsFaToEn} from "@persian-tools/persian-tools";
+
 
 export function enterName(ctx, val, next_cmd) {
   ctx.replyWithHTML(ctx.i18n.t('enter_fof_name')) /// in enter name function, we have gotten the name and we want to tell user to enter next
@@ -29,6 +31,7 @@ export function enterFofName(ctx, val, next_cmd) {
 }
 
 export function enterPhone(ctx, val, next_cmd) {
+  val = digitsFaToEn(val)
   val = val.replace("+98", "")
   if (!isNaN(val) && (val.length === 10 || val.length === 11)) {
     ctx.replyWithHTML(ctx.i18n.t('enter_reason'), reasonKeyboard(ctx))

@@ -60,11 +60,11 @@ bot.hears(
     }
 );
 
-bot.hears(match('keyboards.enter_debt'), ctx => {
+bot.hears(match('keyboards.enter_debt'), async ctx => {
     ctx.scene.enter('enterDebt')
 });
 
-bot.hears(match('keyboards.debt_list'), ctx => {
+bot.hears(match('keyboards.debt_list'), async ctx => {
     ctx.scene.enter('debtList')
 });
 
@@ -73,12 +73,12 @@ bot.hears(match('keyboards.debt_list'), ctx => {
     These actions actually are related to alert system,
     so it could be possible to call them from anywhere
 */
-debtList.action(/askRemoveConfirmation/, askRemoveConfirmation)
-debtList.action(/askSettleConfirmation/, askSettleConfirmation)
-debtList.action(/showDebtor/, showDebtor);
-debtList.action(/removeDebt/, removeDebt);
-debtList.action(/settleDebt/, settleDebt);
-debtList.action(/cancel/, nextPrevDebt);
+bot.action(/askRemoveConfirmation/, askRemoveConfirmation)
+bot.action(/askSettleConfirmation/, askSettleConfirmation)
+bot.action(/showDebtor/, showDebtor);
+bot.action(/removeDebt/, removeDebt);
+bot.action(/settleDebt/, settleDebt);
+bot.action(/cancel/, nextPrevDebt);
 
 bot.catch((err) => {
     console.log("There is in bot.js", err)
