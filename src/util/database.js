@@ -1,6 +1,5 @@
-import {saveToSession} from "./session";
+import {Pool} from "pg"
 
-const {Pool} = require('pg')
 require("dotenv").config()
 
 export function DataBaseInit() {
@@ -75,30 +74,23 @@ export function newUser(name, phone, reason, amount, vendor_id, cb) {
   })
 }
 
-export function getAllDebts(cb) {
-  const sql = `SELECT * FROM customers WHERE settled = false;`
-  db.query(sql, (err, res) => {
-    if (err) console.log(err)
-    else {
-      cb(res.rows)
-    }
-  })
-}
-
-export function makeDebtList(ctx, id = null) {
+export function getAllDebts(vendor_id, debtor_id = null) {
   return new Promise((resolve, reject) => {
     let sql;
-    if (id) sql = {
+    // Actually here we want to get an specific user
+    if (debtor_id) sql = {
       text: `SELECT * FROM customers WHERE id = $1`,
-      values: [id]
+      values: [debtor_id]
     }
-    else sql = `SELECT * FROM customers WHERE settled=false`
+    // We want to get all unsettled user which a specific vendor have made.
+    else sql = {
+      text: `SELECT * FROM customers WHERE settled=false AND vendor_id = $1`,
+      values: [vendor_id]
+    }
     db.query(sql, (err, res) => {
       if (err) reject(err)
       else {
-        ctx.session.debts = res.rows
-        saveToSession(ctx);
-        resolve(true)
+        resolve(res.rows)
       }
     })
   })

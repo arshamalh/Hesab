@@ -10,14 +10,11 @@ const start = new Scene('start');
 
 function startTimer(ctx) {
   setInterval(() => {
-    let td;
-    let timeDifference = function (time) {
-      // How many days passed of particular debts
-      return (Date.now() - Date.parse(time)) / 864e5
-    }
-    getAllDebts((debts) => {
+    getAllDebts(ctx.from.id).then((debts) => {
+      let td;
       for (let dbt of debts) {
-        td = timeDifference(dbt.created_at)
+        // How many days passed of particular debts
+        td = (Date.now() - Date.parse(dbt.created_at)) / 864e5
         if (td > 1) {
           ctx.replyWithHTML(
             ctx.i18n.t('debtor_timer', {name: dbt.name, days: Math.round(td)}),
