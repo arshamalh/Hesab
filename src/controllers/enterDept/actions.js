@@ -1,11 +1,7 @@
 import {Extra} from "telegraf";
 import {newUser} from "../../util/database";
 import {saveToSession} from "../../util/session";
-import {
-  reasonKeyboard,
-  submitOrderKeyboard,
-  newDebtKeyboard
-} from "./helpers";
+import {newDebtKeyboard, reasonKeyboard, submitOrderKeyboard} from "./helpers";
 import {digitsFaToEn} from "@persian-tools/persian-tools";
 
 
@@ -24,7 +20,7 @@ export function enterName(ctx, val, next_cmd) {
 export function enterPhone(ctx, val, next_cmd) {
   val = digitsFaToEn(val)
   val = val.replace("+98", "")
-  if (!isNaN(val) && (val.length === 10 || val.length === 11)) {
+  if (!isNaN(val)) {
     ctx.replyWithHTML(ctx.i18n.t('enter_reason'), reasonKeyboard(ctx))
       .then(d => {
         ctx.session.Customer['phone'] = val;
@@ -86,7 +82,7 @@ export function submitOrder(ctx) {
   const cond = JSON.parse(ctx.callbackQuery.data).p;
   if (cond) {
     let {name, phone, reason, amount} = ctx.session.Customer
-    newUser(name, phone, reason, amount, (result) => {
+    newUser(name, phone, reason, amount, ctx.from.id, (result) => {
       ctx.answerCbQuery()
       if (result) {
         ctx.telegram.editMessageReplyMarkup(ctx.from.id, ctx.session.last_action_message, null).then(() => {

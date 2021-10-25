@@ -1,19 +1,13 @@
 import Scene from 'telegraf/scenes/base';
 import {saveToSession} from "../../util/session";
-import {
-    enterName,
-    enterPhone,
-    enterReason,
-    selectReason,
-    enterAmount,
-    submitOrder
-} from "./actions";
+import {enterAmount, enterName, enterPhone, enterReason, selectReason, submitOrder} from "./actions";
 import {match} from "telegraf-i18n";
+import {backKeyboard} from "../../util/menu";
 
 const enterDebt = new Scene('enterDebt');
 
 enterDebt.enter(async ctx => {
-    ctx.replyWithHTML(ctx.i18n.t('enter_name'))
+    ctx.replyWithHTML(ctx.i18n.t('enter_name'), backKeyboard(ctx))
     ctx.session.Customer = {}
     ctx.session.next_cmd = "enterName";
     saveToSession(ctx)
