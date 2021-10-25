@@ -1,6 +1,6 @@
-import debtList from "./controllers/debtList";
-
 require('@babel/register');
+import debtList from "./controllers/debtList";
+import debtListScene from "./controllers/debtList";
 import path from "path";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
@@ -10,7 +10,6 @@ import Stage from 'telegraf/stage';
 import session from 'telegraf/session';
 import startScene from "./controllers/start";
 import enterDebtScene from './controllers/enterDept';
-import debtListScene from './controllers/debtList';
 import {DataBaseInit} from "./util/database"
 import {getUserInfo} from './middlewares/user-info';
 import {askRemoveConfirmation, askSettleConfirmation, nextPrevDebt, removeDebt, settleDebt, showDebtor} from "./controllers/debtList/actions";
@@ -53,20 +52,9 @@ bot.start((ctx) => {
     ctx.scene.enter('start')
 });
 
-bot.hears(
-    match('keyboards.back'),
-    async (ctx) => {
-        ctx.scene.enter('start');
-    }
-);
-
-bot.hears(match('keyboards.enter_debt'), async ctx => {
-    ctx.scene.enter('enterDebt')
-});
-
-bot.hears(match('keyboards.debt_list'), async ctx => {
-    ctx.scene.enter('debtList')
-});
+bot.hears(match('keyboards.back'), async ctx => ctx.scene.enter('start'));
+bot.hears(match('keyboards.enter_debt'), async ctx => ctx.scene.enter('enterDebt'));
+bot.hears(match('keyboards.debt_list'), async ctx => ctx.scene.enter('debtList'));
 
 // Global actions
 /*

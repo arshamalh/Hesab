@@ -7,3 +7,7 @@ export const mainKeyboard = (ctx) => {
     let mainKeyboard = Markup.keyboard([[debt_list, enter_debt], [back]])
     return mainKeyboard.resize().extra();
 }
+
+export const backKeyboard = (ctx) => {
+    return Markup.keyboard([[ctx.i18n.t('keyboards.back')]]).resize().extra();
+}

@@ -1,10 +1,7 @@
 import {saveToSession} from "../../util/session";
-import {
-  confirmDeleteKeyboard, confirmSettleKeyboard,
-  getDebtKeyboard
-} from "./helpers";
-import {makeDebtList, removeDebtDB, settleDebtDB} from "../../util/database";
-import {timeAgo, digitsEnToFa} from "@persian-tools/persian-tools";
+import {confirmDeleteKeyboard, confirmSettleKeyboard, getDebtKeyboard} from "./helpers";
+import {getAllDebts, removeDebtDB, settleDebtDB} from "../../util/database";
+import {digitsEnToFa, timeAgo} from "@persian-tools/persian-tools";
 
 const moment = require('jalali-moment');
 
@@ -115,7 +112,9 @@ export function showDebtor(ctx) {
   ctx.answerCbQuery(null);
   const d = JSON.parse(ctx.callbackQuery.data);
   let debtor_id = d.p;
-  makeDebtList(ctx, debtor_id).then(() => {
+  getAllDebts(null, debtor_id).then((debts) => {
+    ctx.session.debts = debts;
+    saveToSession(ctx);
     getDebt(ctx, 0)
   })
 }
