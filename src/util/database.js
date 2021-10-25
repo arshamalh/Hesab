@@ -12,17 +12,18 @@ export function DataBaseInit() {
     port: process.env.DB_PORT,
   })
 
-  const createTable = `CREATE TABLE IF NOT EXISTS Customers (
-   id SERIAL PRIMARY KEY,
-   name VARCHAR(100) NOT NULL,
-   phone VARCHAR(20) NOT NULL,
-   fofName VARCHAR(100),
-   settled VARCHAR(10),
-   amount NUMERIC,
-   reason TEXT,
-   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-   settled_at TIMESTAMP WITH TIME ZONE
-  );`
+  const createTable = `
+    CREATE TABLE IF NOT EXISTS customers (
+       id SERIAL PRIMARY KEY,
+       name VARCHAR(100) NOT NULL,
+       phone VARCHAR(20) NOT NULL,
+       settled BOOL DEFAULT false,
+       amount NUMERIC,
+       reason TEXT,
+       created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+       settled_at TIMESTAMP WITH TIME ZONE
+    );
+  `
 
   db.query(createTable, (err, res) => {
     if (err) console.log(err)
@@ -30,13 +31,13 @@ export function DataBaseInit() {
   })
 }
 
-export function newUser(name, fofName, phone, reason, amount, settled, cb) {
+export function newUser(name, phone, reason, amount, cb) {
   const sql = {
     text: `INSERT INTO Customers 
-             (name, fofName, phone, reason, amount, settled)
-             VALUES ($1, $2, $3, $4, $5, $6)
+             (name, phone, reason, amount)
+             VALUES ($1, $2, $3, $4)
              RETURNING id;`,
-    values: [name, fofName, phone, reason, amount, settled]
+    values: [name, phone, reason, amount]
   }
 
   db.query(sql, (err, res) => {
@@ -49,7 +50,7 @@ export function newUser(name, fofName, phone, reason, amount, settled, cb) {
 }
 
 export function getAllDebts(cb) {
-  const sql = `SELECT * FROM Customers`
+  const sql = `SELECT * FROM customers WHERE settled = false;`
   db.query(sql, (err, res) => {
     if (err) console.log(err)
     else {
@@ -62,10 +63,10 @@ export function makeDebtList(ctx, id = null) {
   return new Promise((resolve, reject) => {
     let sql;
     if (id) sql = {
-      text: `SELECT * FROM Customers WHERE id = $1`,
+      text: `SELECT * FROM customers WHERE id = $1`,
       values: [id]
     }
-    else sql = `SELECT * FROM Customers`
+    else sql = `SELECT * FROM customers WHERE settled=false`
     db.query(sql, (err, res) => {
       if (err) reject(err)
       else {
@@ -80,7 +81,7 @@ export function makeDebtList(ctx, id = null) {
 export function removeDebtDB(id) {
   return new Promise((resolve, reject) => {
     const sql = {
-      text: `DELETE FROM Customers WHERE id = $1`,
+      text: `DELETE FROM customers WHERE id = $1`,
       values: [id]
     }
     db.query(sql, (err, res) => {
@@ -93,7 +94,7 @@ export function removeDebtDB(id) {
 export function settleDebtDB(id) {
   return new Promise((resolve, reject) => {
     const sql = {
-      text: `UPDATE Customers SET settled='آره' WHERE id = $1`,
+      text: `UPDATE customers SET settled=true, settled_at=CURRENT_TIMESTAMP WHERE id = $1`,
       values: [id]
     }
 

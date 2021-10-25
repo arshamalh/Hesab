@@ -12,18 +12,6 @@ export function submitOrderKeyboard(ctx) {
   );
 }
 
-export function settlementKeyboard(ctx) {
-  return Extra.HTML().markup((m) =>
-    m.inlineKeyboard(
-      [
-        m.callbackButton(ctx.i18n.t('btns.yes'), JSON.stringify({a: 'selectSettled', p: true}), false),
-        m.callbackButton(ctx.i18n.t('btns.no'), JSON.stringify({a: 'selectSettled', p: false}), false)
-      ],
-      {}
-    )
-  );
-}
-
 export function reasonKeyboard(ctx) {
   return Extra.HTML().markup((m) =>
     m.inlineKeyboard(
