@@ -45,25 +45,23 @@ start.start(ctx => {
 })
 
 start.hears(match('keyboards.back'), async ctx => ctx.scene.enter('start'));
+start.hears(match('start_itself_key'), async ctx => ctx.scene.enter('start'));
 start.hears(match('keyboards.enter_debt'), async ctx => ctx.scene.enter('enterDebt'));
 start.hears(match('keyboards.debt_list'), async ctx => ctx.scene.enter('debtList'));
 
-start.hears(/(.+)/, async (ctx) => {
-  return new Promise(resolve => {
-    if (ctx.session['next_cmd'] === 'vEnterName') {
-      ctx.replyWithHTML(ctx.i18n.t('enter_phone'))
-        .then(() => {
-          ctx.session.vendor = ctx.message.text;
-          ctx.session.next_cmd = 'vEnterPhone';
-          saveToSession(ctx)
-        });
-    } else if (ctx.session['next_cmd'] === 'vEnterPhone') {
-      newVendor(ctx.from.id, ctx.from.username, ctx.session.vendor, ctx.message.text, (res) => {
-        if (res) ctx.replyWithHTML(ctx.i18n.t('vendor.thank_you'))
-      })
-    }
-    resolve(true);
-  });
+start.hears(/(.+)/, (ctx) => {
+  if (ctx.session['next_cmd'] === 'vEnterName') {
+    ctx.replyWithHTML(ctx.i18n.t('vendor.enter_phone'))
+      .then(() => {
+        ctx.session.vendor = ctx.message.text;
+        ctx.session.next_cmd = 'vEnterPhone';
+        saveToSession(ctx)
+      });
+  } else if (ctx.session['next_cmd'] === 'vEnterPhone') {
+    newVendor(ctx.from.id, ctx.from.username, ctx.session.vendor, ctx.message.text, (res) => {
+      if (res) ctx.replyWithHTML(ctx.i18n.t('vendor.thank_you'))
+    })
+  }
 })
 
 export default start;

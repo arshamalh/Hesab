@@ -42,3 +42,14 @@ export function newDebtKeyboard(ctx) {
     )
   );
 }
+
+export function nonePhoneKeyboard(ctx) {
+  return Extra.HTML().markup((m) =>
+    m.inlineKeyboard(
+      [
+        m.callbackButton(ctx.i18n.t('btns.none_phone'), JSON.stringify({a: 'nonePhone', p: 0}), false)
+      ],
+      {}
+    )
+  );
+}
