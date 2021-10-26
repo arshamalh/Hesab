@@ -6,6 +6,7 @@
   "enter_reason": "دلیل بدهی",
   "enter_amount": "مقدار بدهی",
   "enter_settled": "تسویه شده؟",
+  "start_itself_key": "شروع",
   "reason_selected": "دلیل انتخاب شده: <b>${reason}</b>\n",
   "settled_state": "<b>تسویه شده؟: </b> ${st}\n",
   "preview": "<b>اطلاعات درسته؟</b>\n\uD83D\uDCA0 نام:                  ${name}\n\uD83D\uDCA0 دلیل:               ${reason}\n\uD83D\uDCA0 موبایل:             ${phone}\n\uD83C\uDF00 مبلغ:                ${amount}\n\u2067",
@@ -13,7 +14,7 @@
   "successful_submit": "نسیه با موفقیت ثبت شد، پیگیری: ${id}",
   "failed_submit": "ثبت نسیه با خطا مواجه شد!",
   "debt_list": "بخش لیست بدهی ها",
-  "debt_list_item": "<b>اطلاعات کاربر</b>\n\uD83D\uDCA0کد کاربر:            ${id}\n\uD83D\uDCA0  نام:                  ${name}\n\uD83D\uDCA0 موبایل:             ${phone}\n\uD83C\uDF00 مبلغ:                ${amount}\n\uD83C\uDF00 دلیل:               ${reason}\n\uD83D\uDCA0 تاریخ:              ${created_at}\n\uD83D\uDCA0 تسویه شده:      ${settled}\n\uD83D\uDCA0  تاریخ تسویه:   ${settled_at}\n\u2067",
+  "debt_list_item": "<b>اطلاعات کاربر</b>\n\uD83D\uDCA0کد کاربر:            ${id}\n\uD83D\uDCA0  نام:                  ${name}\n\uD83D\uDCA0 موبایل:             ${phone}\n\uD83C\uDF00 مبلغ:                ${amount}\n\uD83C\uDF00 دلیل:               ${reason}\n\uD83D\uDCA0 تاریخ:              ${created_at}\n\u2067",
   "debt_deleted": "بدهی حذف شد",
   "debt_settled": "حساب کاربر تسویه شد",
   "debtor_timer": "کاربر ${name} به مدت ${days} روز بدهکار بوده است.",
@@ -28,7 +29,7 @@
     "3": "کتاب",
     "4": "تراکتور",
     "5": "مالیات",
-    "6": "ابلاغیه"
+    "6": "قولنامه"
   },
   "vendor": {
     "enter_name": "اسمتون چیه؟",
@@ -51,6 +52,7 @@
     "sure_delete": "اطمینان دارم، حذف کن \uD83D\uDC4D\uD83C\uDFFC",
     "sure_settle": "تسویه شده \uD83D\uDC4D\uD83C\uDFFC",
     "cancel": "انصراف \uD83D\uDEAB",
-    "show_debtor": "نمایش کاربر"
+    "show_debtor": "نمایش کاربر",
+    "none_phone": "بدون تلفن ❌"
   }
 }
