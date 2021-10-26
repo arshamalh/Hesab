@@ -1,0 +1,6 @@
+web: node src/bot.js --exec babel-node
+
+npm run migrate create <name and it can be space separated>
+
+// run it in gitbash whenever you want to migrate database
+DATABASE_URL=postgres://postgres:mrk%4022LH@localhost:5432/socialnetwork  npm run migrate up
